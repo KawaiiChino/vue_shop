@@ -34,13 +34,14 @@
 
 </template>
 <script>
+
 export default {
     data() {
         return {
             // 表单的数据绑定对象
             loginForm: {
-                username: 'suki',
-                password: '',
+                username: 'admin',
+                password: '123456',
 
             },
             // 表单验证规则对象
@@ -58,12 +59,27 @@ export default {
     methods: {
         // 点击重置按钮重置表单
         resetLoginForm() {
-            console.log(this);
+            // console.log(this);
             this.$refs.loginFormRef.resetFields();
         },
         login() {
-            this.$refs.loginFormRef.validate((valid) => {
-                console.log(valid);
+            this.$refs.loginFormRef.validate(async valid => {
+                // console.log(valid);
+                if (!valid) return;
+                // const {data:res} =await this.$http.post('login', this.loginForm);
+                // console.log(res);
+                const { data: res } = await this.$http.post('login', this.loginForm);
+                if (res.meta.status !== 200) return this.$message.error("登录失败");
+                this.$message.success("登录成功");
+                // 1登录成功后token保存到客户端的session storage
+                // 除了登录外其他API必须登录后才能访问
+                // token只应在当前网站打开期间生效，故保存在sessionStorage
+                
+                //
+                console.log(res);
+                window.sessionStorage.setItem('token', res.data.token);
+                // 2.路由跳转
+                this.$router.push("/home");
             })
         }
     },
