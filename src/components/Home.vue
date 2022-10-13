@@ -11,7 +11,7 @@ export default {
     methods: {
         
         logout() {
-            // 退出1清空token，2跳转
+            // 退出1清空token，2
             window.sessionStorage.clear()
             this.$router.push("/login");
             this.$message.success("退出成功");
